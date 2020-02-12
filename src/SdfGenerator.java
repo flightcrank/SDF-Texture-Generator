@@ -3,21 +3,28 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
 /**
  *
  * @author karma
  */
-public class Gui extends javax.swing.JFrame implements PropertyChangeListener {
+public class SdfGenerator extends javax.swing.JFrame implements PropertyChangeListener {
 
 	/**
 	 * Creates new form Gui
 	 */
 	
 	DistanceField2D df;
+	BufferedImage img; //output texture
 	
-	public Gui(String[] args) {
+	public SdfGenerator(String[] args) {
 		
 		df = new DistanceField2D();
 		
@@ -48,6 +55,7 @@ public class Gui extends javax.swing.JFrame implements PropertyChangeListener {
         private void initComponents() {
                 java.awt.GridBagConstraints gridBagConstraints;
 
+                jFileChooser1 = new javax.swing.JFileChooser();
                 jScrollPane1 = new javax.swing.JScrollPane();
                 jImagePanel3 = new JImagePanel();
                 jPanel2 = new javax.swing.JPanel();
@@ -63,6 +71,8 @@ public class Gui extends javax.swing.JFrame implements PropertyChangeListener {
                 jLabel2 = new javax.swing.JLabel();
                 jLabel4 = new javax.swing.JLabel();
                 jComboBox1 = new javax.swing.JComboBox<>();
+                jPanel4 = new javax.swing.JPanel();
+                jButton3 = new javax.swing.JButton();
 
                 setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
                 setTitle("SDF Texture Generator");
@@ -196,6 +206,27 @@ public class Gui extends javax.swing.JFrame implements PropertyChangeListener {
 
                 jPanel2.add(jPanel3);
 
+                jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Output Texture", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP));
+                jPanel4.setLayout(new java.awt.GridBagLayout());
+
+                jButton3.setText("Save Texture");
+                jButton3.setEnabled(false);
+                jButton3.addActionListener(new java.awt.event.ActionListener() {
+                        public void actionPerformed(java.awt.event.ActionEvent evt) {
+                                jButton3ActionPerformed(evt);
+                        }
+                });
+                gridBagConstraints = new java.awt.GridBagConstraints();
+                gridBagConstraints.gridx = 1;
+                gridBagConstraints.gridy = 1;
+                gridBagConstraints.gridwidth = 2;
+                gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+                gridBagConstraints.weightx = 1.0;
+                gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+                jPanel4.add(jButton3, gridBagConstraints);
+
+                jPanel2.add(jPanel4);
+
                 getContentPane().add(jPanel2, java.awt.BorderLayout.WEST);
 
                 pack();
@@ -203,6 +234,7 @@ public class Gui extends javax.swing.JFrame implements PropertyChangeListener {
 
         private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
                 
+		jButton3.setEnabled(false);
 		Task task = new Task(df);
 		task.addPropertyChangeListener(this);
 		task.execute();
@@ -210,12 +242,41 @@ public class Gui extends javax.swing.JFrame implements PropertyChangeListener {
         }//GEN-LAST:event_jButton1ActionPerformed
 
         private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-                // TODO add your handling code here:
+                
+		int i = jFileChooser1.showOpenDialog(jPanel1);
+		
+		if (i == JFileChooser.APPROVE_OPTION) {
+			
+			File f = jFileChooser1.getSelectedFile();
+			String path = f.getAbsolutePath();
+			df.setInputImage(path);
+			jImagePanel1.setImage(df.input.getScaledInstance(100, 100, Image.SCALE_DEFAULT));
+			jImagePanel1.paintComponent(jImagePanel1.getGraphics());
+		}
+		
         }//GEN-LAST:event_jButton2ActionPerformed
 
         private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
                 // TODO add your handling code here:
         }//GEN-LAST:event_jComboBox1ActionPerformed
+
+        private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+                
+		int i = jFileChooser1.showSaveDialog(jPanel1);
+		
+		if (i == JFileChooser.APPROVE_OPTION) {
+			
+			File f = jFileChooser1.getSelectedFile();
+			
+			try {
+				ImageIO.write(img, "png", f);
+				
+			} catch (IOException ex) {
+				
+				JOptionPane.showMessageDialog(rootPane, "Could not save image");			
+			}
+		}
+        }//GEN-LAST:event_jButton3ActionPerformed
 	
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
@@ -245,14 +306,15 @@ public class Gui extends javax.swing.JFrame implements PropertyChangeListener {
 				}
 			}
 		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(Gui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(SdfGenerator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(Gui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(SdfGenerator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(Gui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(SdfGenerator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(Gui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(SdfGenerator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
+		//</editor-fold>
 		//</editor-fold>
 		
 		/* Create and display the form */
@@ -261,7 +323,7 @@ public class Gui extends javax.swing.JFrame implements PropertyChangeListener {
 			@Override
 			public void run() {
 
-				Gui window = new Gui(args);
+				SdfGenerator window = new SdfGenerator(args);
 				window.pack();
 				window.setVisible(true);
 			}
@@ -271,7 +333,9 @@ public class Gui extends javax.swing.JFrame implements PropertyChangeListener {
         // Variables declaration - do not modify//GEN-BEGIN:variables
         private javax.swing.JButton jButton1;
         private javax.swing.JButton jButton2;
+        private javax.swing.JButton jButton3;
         private javax.swing.JComboBox<String> jComboBox1;
+        private javax.swing.JFileChooser jFileChooser1;
         private JImagePanel jImagePanel1;
         private JImagePanel jImagePanel3;
         private javax.swing.JLabel jLabel1;
@@ -281,6 +345,7 @@ public class Gui extends javax.swing.JFrame implements PropertyChangeListener {
         private javax.swing.JPanel jPanel1;
         private javax.swing.JPanel jPanel2;
         private javax.swing.JPanel jPanel3;
+        private javax.swing.JPanel jPanel4;
         private javax.swing.JProgressBar jProgressBar1;
         private javax.swing.JScrollPane jScrollPane1;
         private javax.swing.JSpinner jSpinner1;
@@ -345,7 +410,6 @@ public class Gui extends javax.swing.JFrame implements PropertyChangeListener {
 			 try {
 				
 				System.out.println(this.get());
-				BufferedImage img;
 				
 				switch ((String) jComboBox1.getSelectedItem()) {
 					
@@ -372,6 +436,8 @@ public class Gui extends javax.swing.JFrame implements PropertyChangeListener {
 				
 				jImagePanel3.setImage(img.getScaledInstance(512, 512, Image.SCALE_DEFAULT));
 				jImagePanel3.paintComponent(jImagePanel3.getGraphics());
+				
+				jButton3.setEnabled(true);
 				
 			 } catch(Exception ex) {
 				 
