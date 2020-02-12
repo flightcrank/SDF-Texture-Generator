@@ -27,15 +27,22 @@ public class SdfGenerator extends javax.swing.JFrame implements PropertyChangeLi
 	public SdfGenerator(String[] args) {
 		
 		df = new DistanceField2D();
-		
-		//set input image to argument 0
-		if (args[0].isEmpty() == false) {
-			
-			df.setInputImage(args[0]);
-		}
-		
 		initComponents();
 		
+		//set input image to argument 0
+		if (args.length > 0) {
+			
+			try {
+				df.setInputImage(args[0]);
+				jImagePanel1.setImage(df.getInputImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
+				
+			} catch (IOException ex) {
+				
+				String s = "error opening" + args[0];
+				JOptionPane.showMessageDialog(rootPane, s);
+			}
+		}
+
 		//set label
 		if (df.input != null) {
 			
@@ -56,8 +63,7 @@ public class SdfGenerator extends javax.swing.JFrame implements PropertyChangeLi
                 java.awt.GridBagConstraints gridBagConstraints;
 
                 jFileChooser1 = new javax.swing.JFileChooser();
-                jScrollPane1 = new javax.swing.JScrollPane();
-                jImagePanel3 = new JImagePanel();
+                jFileChooser2 = new javax.swing.JFileChooser();
                 jPanel2 = new javax.swing.JPanel();
                 jPanel1 = new javax.swing.JPanel();
                 jImagePanel1 = new JImagePanel();
@@ -73,19 +79,13 @@ public class SdfGenerator extends javax.swing.JFrame implements PropertyChangeLi
                 jComboBox1 = new javax.swing.JComboBox<>();
                 jPanel4 = new javax.swing.JPanel();
                 jButton3 = new javax.swing.JButton();
+                jPanel5 = new javax.swing.JPanel();
+                jImagePanel3 = new JImagePanel();
 
                 setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
                 setTitle("SDF Texture Generator");
 
-                jScrollPane1.setPreferredSize(new java.awt.Dimension(256, 256));
-
-                jImagePanel3.setPreferredSize(new java.awt.Dimension(512, 512));
-                jScrollPane1.setViewportView(jImagePanel3);
-
-                getContentPane().add(jScrollPane1, java.awt.BorderLayout.CENTER);
-
-                jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
-                jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.Y_AXIS));
+                jPanel2.setLayout(new java.awt.GridBagLayout());
 
                 jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Input Image", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP));
                 jPanel1.setLayout(new java.awt.GridBagLayout());
@@ -95,7 +95,7 @@ public class SdfGenerator extends javax.swing.JFrame implements PropertyChangeLi
                 jImagePanel1.setMinimumSize(new java.awt.Dimension(100, 100));
                 jImagePanel1.setName(""); // NOI18N
                 jImagePanel1.setPreferredSize(new java.awt.Dimension(101, 101));
-                jImagePanel1.setImage(df.getInputImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
+
                 gridBagConstraints = new java.awt.GridBagConstraints();
                 gridBagConstraints.gridx = 1;
                 gridBagConstraints.gridy = 1;
@@ -137,7 +137,12 @@ public class SdfGenerator extends javax.swing.JFrame implements PropertyChangeLi
                 gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
                 jPanel1.add(jLabel3, gridBagConstraints);
 
-                jPanel2.add(jPanel1);
+                gridBagConstraints = new java.awt.GridBagConstraints();
+                gridBagConstraints.gridx = 0;
+                gridBagConstraints.gridy = 0;
+                gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+                gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+                jPanel2.add(jPanel1, gridBagConstraints);
 
                 jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Generate Texture", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP));
                 jPanel3.setLayout(new java.awt.GridBagLayout());
@@ -204,7 +209,12 @@ public class SdfGenerator extends javax.swing.JFrame implements PropertyChangeLi
                 gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
                 jPanel3.add(jComboBox1, gridBagConstraints);
 
-                jPanel2.add(jPanel3);
+                gridBagConstraints = new java.awt.GridBagConstraints();
+                gridBagConstraints.gridx = 0;
+                gridBagConstraints.gridy = 1;
+                gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+                gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+                jPanel2.add(jPanel3, gridBagConstraints);
 
                 jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Output Texture", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP));
                 jPanel4.setLayout(new java.awt.GridBagLayout());
@@ -225,9 +235,24 @@ public class SdfGenerator extends javax.swing.JFrame implements PropertyChangeLi
                 gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
                 jPanel4.add(jButton3, gridBagConstraints);
 
-                jPanel2.add(jPanel4);
+                gridBagConstraints = new java.awt.GridBagConstraints();
+                gridBagConstraints.gridx = 0;
+                gridBagConstraints.gridy = 2;
+                gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+                gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+                gridBagConstraints.weighty = 1.0;
+                gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+                jPanel2.add(jPanel4, gridBagConstraints);
 
                 getContentPane().add(jPanel2, java.awt.BorderLayout.WEST);
+
+                jPanel5.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+                jPanel5.setLayout(new java.awt.BorderLayout());
+
+                jImagePanel3.setPreferredSize(new java.awt.Dimension(256, 256));
+                jPanel5.add(jImagePanel3, java.awt.BorderLayout.CENTER);
+
+                getContentPane().add(jPanel5, java.awt.BorderLayout.CENTER);
 
                 pack();
         }// </editor-fold>//GEN-END:initComponents
@@ -249,11 +274,17 @@ public class SdfGenerator extends javax.swing.JFrame implements PropertyChangeLi
 			
 			File f = jFileChooser1.getSelectedFile();
 			String path = f.getAbsolutePath();
-			df.setInputImage(path);
-			jImagePanel1.setImage(df.input.getScaledInstance(100, 100, Image.SCALE_DEFAULT));
-			jImagePanel1.paintComponent(jImagePanel1.getGraphics());
+			
+			try {
+				df.setInputImage(path);
+				jImagePanel1.setImage(df.input.getScaledInstance(100, 100, Image.SCALE_DEFAULT));
+				jImagePanel1.paintComponent(jImagePanel1.getGraphics());
+				
+			} catch(IOException ex) {
+				
+				JOptionPane.showMessageDialog(rootPane, "could not save image to:\n "+ path);
+			}
 		}
-		
         }//GEN-LAST:event_jButton2ActionPerformed
 
         private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
@@ -336,6 +367,7 @@ public class SdfGenerator extends javax.swing.JFrame implements PropertyChangeLi
         private javax.swing.JButton jButton3;
         private javax.swing.JComboBox<String> jComboBox1;
         private javax.swing.JFileChooser jFileChooser1;
+        private javax.swing.JFileChooser jFileChooser2;
         private JImagePanel jImagePanel1;
         private JImagePanel jImagePanel3;
         private javax.swing.JLabel jLabel1;
@@ -346,8 +378,8 @@ public class SdfGenerator extends javax.swing.JFrame implements PropertyChangeLi
         private javax.swing.JPanel jPanel2;
         private javax.swing.JPanel jPanel3;
         private javax.swing.JPanel jPanel4;
+        private javax.swing.JPanel jPanel5;
         private javax.swing.JProgressBar jProgressBar1;
-        private javax.swing.JScrollPane jScrollPane1;
         private javax.swing.JSpinner jSpinner1;
         // End of variables declaration//GEN-END:variables
 

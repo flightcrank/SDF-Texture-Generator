@@ -1,6 +1,7 @@
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import javax.imageio.ImageIO;
 
 /**
@@ -139,19 +140,12 @@ public class DistanceField2D {
 		}
 	}
 	
-	public void setInputImage(String path) {
+	public void setInputImage(String path) throws IOException {
 			
 		File f = new File(path);
-		
-		try {
-			
-			input = ImageIO.read(f);
-			distanceField = new float[input.getWidth()][input.getHeight()];
-			
-		} catch(Exception ex) {
-			
-			ex.printStackTrace();
-		}
+		input = ImageIO.read(f);
+		distanceField = new float[input.getWidth()][input.getHeight()];
+
 	}
 	
 	public BufferedImage generateOuputImage(int w, int h) {
