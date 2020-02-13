@@ -15,10 +15,6 @@ import javax.swing.SwingWorker;
  * @author karma
  */
 public class SDFTextureGenerator extends javax.swing.JFrame implements PropertyChangeListener {
-
-	/**
-	 * Creates new form Gui
-	 */
 	
 	DistanceField2D df;
 	BufferedImage img; //output texture
@@ -198,7 +194,7 @@ public class SDFTextureGenerator extends javax.swing.JFrame implements PropertyC
                 gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
                 jPanel3.add(jLabel4, gridBagConstraints);
 
-                jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "64 x 64", "128  x 128", "256 x 256", "512 x 512" }));
+                jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "64 x 64", "128 x 128", "256 x 256", "512 x 512" }));
                 jComboBox1.addActionListener(new java.awt.event.ActionListener() {
                         public void actionPerformed(java.awt.event.ActionEvent evt) {
                                 jComboBox1ActionPerformed(evt);
@@ -298,9 +294,11 @@ public class SDFTextureGenerator extends javax.swing.JFrame implements PropertyC
 				df.setInputImage(path);
 				jImagePanel1.setImage(df.input.getScaledInstance(100, 100, Image.SCALE_DEFAULT));
 				jImagePanel1.paintComponent(jImagePanel1.getGraphics());
+				jLabel3.setText(String.format("%d x %d", df.input.getWidth(), df.input.getHeight()));
 				
 			} catch(IOException ex) {
 				
+				jLabel3.setText("");
 				JOptionPane.showMessageDialog(rootPane, "could not save image to:\n "+ path);
 			}
 		}
@@ -405,10 +403,10 @@ public class SDFTextureGenerator extends javax.swing.JFrame implements PropertyC
         private javax.swing.JButton saveButton;
         // End of variables declaration//GEN-END:variables
 	
-	class Task extends SwingWorker<Boolean, Integer> {
+	class Task extends SwingWorker<Void, Void> {
 	
 		@Override
-		public Boolean doInBackground() {
+		public Void doInBackground() {
 
 			//calculate distance field
 			int cx = df.input.getWidth() / 2;
@@ -443,9 +441,9 @@ public class SDFTextureGenerator extends javax.swing.JFrame implements PropertyC
 					count++;
 					setProgress((int)(val * 100));
 				}
-			}	
+			}
 			
-			return true;
+			return null;
 		}
 
 		 @Override
