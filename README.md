@@ -6,11 +6,11 @@ only black and white data.
 
 to compile
 
-	$ javac Gui.java
+	$ javac SDFTextureGenerator.java
 
 that should compile all .java files. to run the program type the command
 
-	$ java Gui
+	$ java SDFTextureGenerator
 
 ## Images 
 ![swing screenshot](https://i.imgur.com/7ZpITlL.png)
